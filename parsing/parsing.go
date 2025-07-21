@@ -1,13 +1,12 @@
 package parsing
 
 import (
-	"io"
 	"fmt"
+	"golang.org/x/net/html"
+	"io"
 	"slices"
 	"strings"
-	"golang.org/x/net/html"
 	// "golang.org/x/net/html/atom"
-
 	// "github.com/aavtic/broler/utils/queue"
 )
 
@@ -28,8 +27,8 @@ func TraverseNode(root *html.Node) {
 	// queue := queue.New()
 	for child := range root.Descendants() {
 		for _, attr := range child.Attr {
-			if (slices.Contains(URL_ATTRIBUTES, attr.Key)) {
-				fmt.Println(child.Data)
+			if slices.Contains(URL_ATTRIBUTES, attr.Key) {
+				fmt.Println(child.Data, ": ", attr.Val)
 			}
 		}
 	}
