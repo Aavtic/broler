@@ -1,0 +1,28 @@
+syntax = "proto3";
+package broler;
+
+option go_package = "github.com/aavtic/broler/rpc/broler_grpc";
+
+
+service Broler {
+  rpc FoundLink(FoundLinkArg) returns (Pages) {}
+}
+
+message FoundLinkArg {}
+
+// {
+//   "aavtic.dev": {
+//     is_end: false
+//     "styles.css": {is_end: true},
+//     "projects/ass_parser": {is_end: false...}
+//   },
+// }
+
+message Paths {
+  bool is_end = 1;
+  map<string, Paths> paths = 2;
+}
+
+message Pages {
+  map<string, Paths> root = 1;
+}
