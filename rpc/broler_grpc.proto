@@ -5,10 +5,11 @@ option go_package = "github.com/aavtic/broler/rpc/broler_grpc";
 
 
 service Broler {
-  rpc FoundLink(FoundLinkArg) returns (Pages) {}
+  rpc PageInfo(PagesInfoReq) returns (stream Pages) {}
+  rpc ClientRequests(stream ClientReq) returns (stream ServerResponse) {}
 }
 
-message FoundLinkArg {}
+message PagesInfoReq {}
 
 // {
 //   "aavtic.dev": {
@@ -25,4 +26,12 @@ message Paths {
 
 message Pages {
   map<string, Paths> root = 1;
+}
+
+message ClientReq {
+  string request = 1;
+}
+
+message ServerResponse {
+  string response = 1;
 }

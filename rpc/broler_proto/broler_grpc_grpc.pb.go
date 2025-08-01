@@ -19,14 +19,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Broler_FoundLink_FullMethodName = "/broler.Broler/FoundLink"
+	Broler_PageInfo_FullMethodName       = "/broler.Broler/PageInfo"
+	Broler_ClientRequests_FullMethodName = "/broler.Broler/ClientRequests"
 )
 
 // BrolerClient is the client API for Broler service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BrolerClient interface {
-	FoundLink(ctx context.Context, in *FoundLinkArg, opts ...grpc.CallOption) (*Pages, error)
+	PageInfo(ctx context.Context, in *PagesInfoReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[Pages], error)
+	ClientRequests(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[ClientReq, ServerResponse], error)
 }
 
 type brolerClient struct {
@@ -37,21 +39,44 @@ func NewBrolerClient(cc grpc.ClientConnInterface) BrolerClient {
 	return &brolerClient{cc}
 }
 
-func (c *brolerClient) FoundLink(ctx context.Context, in *FoundLinkArg, opts ...grpc.CallOption) (*Pages, error) {
+func (c *brolerClient) PageInfo(ctx context.Context, in *PagesInfoReq, opts ...grpc.CallOption) (grpc.ServerStreamingClient[Pages], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Pages)
-	err := c.cc.Invoke(ctx, Broler_FoundLink_FullMethodName, in, out, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &Broler_ServiceDesc.Streams[0], Broler_PageInfo_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	return out, nil
+	x := &grpc.GenericClientStream[PagesInfoReq, Pages]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
 }
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type Broler_PageInfoClient = grpc.ServerStreamingClient[Pages]
+
+func (c *brolerClient) ClientRequests(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[ClientReq, ServerResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &Broler_ServiceDesc.Streams[1], Broler_ClientRequests_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[ClientReq, ServerResponse]{ClientStream: stream}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type Broler_ClientRequestsClient = grpc.BidiStreamingClient[ClientReq, ServerResponse]
 
 // BrolerServer is the server API for Broler service.
 // All implementations must embed UnimplementedBrolerServer
 // for forward compatibility.
 type BrolerServer interface {
-	FoundLink(context.Context, *FoundLinkArg) (*Pages, error)
+	PageInfo(*PagesInfoReq, grpc.ServerStreamingServer[Pages]) error
+	ClientRequests(grpc.BidiStreamingServer[ClientReq, ServerResponse]) error
 	mustEmbedUnimplementedBrolerServer()
 }
 
@@ -62,8 +87,11 @@ type BrolerServer interface {
 // pointer dereference when methods are called.
 type UnimplementedBrolerServer struct{}
 
-func (UnimplementedBrolerServer) FoundLink(context.Context, *FoundLinkArg) (*Pages, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method FoundLink not implemented")
+func (UnimplementedBrolerServer) PageInfo(*PagesInfoReq, grpc.ServerStreamingServer[Pages]) error {
+	return status.Errorf(codes.Unimplemented, "method PageInfo not implemented")
+}
+func (UnimplementedBrolerServer) ClientRequests(grpc.BidiStreamingServer[ClientReq, ServerResponse]) error {
+	return status.Errorf(codes.Unimplemented, "method ClientRequests not implemented")
 }
 func (UnimplementedBrolerServer) mustEmbedUnimplementedBrolerServer() {}
 func (UnimplementedBrolerServer) testEmbeddedByValue()                {}
@@ -86,23 +114,23 @@ func RegisterBrolerServer(s grpc.ServiceRegistrar, srv BrolerServer) {
 	s.RegisterService(&Broler_ServiceDesc, srv)
 }
 
-func _Broler_FoundLink_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FoundLinkArg)
-	if err := dec(in); err != nil {
-		return nil, err
+func _Broler_PageInfo_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(PagesInfoReq)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
 	}
-	if interceptor == nil {
-		return srv.(BrolerServer).FoundLink(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Broler_FoundLink_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BrolerServer).FoundLink(ctx, req.(*FoundLinkArg))
-	}
-	return interceptor(ctx, in, info, handler)
+	return srv.(BrolerServer).PageInfo(m, &grpc.GenericServerStream[PagesInfoReq, Pages]{ServerStream: stream})
 }
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type Broler_PageInfoServer = grpc.ServerStreamingServer[Pages]
+
+func _Broler_ClientRequests_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(BrolerServer).ClientRequests(&grpc.GenericServerStream[ClientReq, ServerResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type Broler_ClientRequestsServer = grpc.BidiStreamingServer[ClientReq, ServerResponse]
 
 // Broler_ServiceDesc is the grpc.ServiceDesc for Broler service.
 // It's only intended for direct use with grpc.RegisterService,
@@ -110,12 +138,19 @@ func _Broler_FoundLink_Handler(srv interface{}, ctx context.Context, dec func(in
 var Broler_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "broler.Broler",
 	HandlerType: (*BrolerServer)(nil),
-	Methods: []grpc.MethodDesc{
+	Methods:     []grpc.MethodDesc{},
+	Streams: []grpc.StreamDesc{
 		{
-			MethodName: "FoundLink",
-			Handler:    _Broler_FoundLink_Handler,
+			StreamName:    "PageInfo",
+			Handler:       _Broler_PageInfo_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "ClientRequests",
+			Handler:       _Broler_ClientRequests_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
 	Metadata: "broler_grpc.proto",
 }

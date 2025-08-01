@@ -21,26 +21,26 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type FoundLinkArg struct {
+type PagesInfoReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *FoundLinkArg) Reset() {
-	*x = FoundLinkArg{}
+func (x *PagesInfoReq) Reset() {
+	*x = PagesInfoReq{}
 	mi := &file_broler_grpc_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *FoundLinkArg) String() string {
+func (x *PagesInfoReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*FoundLinkArg) ProtoMessage() {}
+func (*PagesInfoReq) ProtoMessage() {}
 
-func (x *FoundLinkArg) ProtoReflect() protoreflect.Message {
+func (x *PagesInfoReq) ProtoReflect() protoreflect.Message {
 	mi := &file_broler_grpc_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -52,8 +52,8 @@ func (x *FoundLinkArg) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use FoundLinkArg.ProtoReflect.Descriptor instead.
-func (*FoundLinkArg) Descriptor() ([]byte, []int) {
+// Deprecated: Use PagesInfoReq.ProtoReflect.Descriptor instead.
+func (*PagesInfoReq) Descriptor() ([]byte, []int) {
 	return file_broler_grpc_proto_rawDescGZIP(), []int{0}
 }
 
@@ -153,12 +153,100 @@ func (x *Pages) GetRoot() map[string]*Paths {
 	return nil
 }
 
+type ClientReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Request       string                 `protobuf:"bytes,1,opt,name=request,proto3" json:"request,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ClientReq) Reset() {
+	*x = ClientReq{}
+	mi := &file_broler_grpc_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ClientReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ClientReq) ProtoMessage() {}
+
+func (x *ClientReq) ProtoReflect() protoreflect.Message {
+	mi := &file_broler_grpc_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ClientReq.ProtoReflect.Descriptor instead.
+func (*ClientReq) Descriptor() ([]byte, []int) {
+	return file_broler_grpc_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *ClientReq) GetRequest() string {
+	if x != nil {
+		return x.Request
+	}
+	return ""
+}
+
+type ServerResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Response      string                 `protobuf:"bytes,1,opt,name=response,proto3" json:"response,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ServerResponse) Reset() {
+	*x = ServerResponse{}
+	mi := &file_broler_grpc_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ServerResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ServerResponse) ProtoMessage() {}
+
+func (x *ServerResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_broler_grpc_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ServerResponse.ProtoReflect.Descriptor instead.
+func (*ServerResponse) Descriptor() ([]byte, []int) {
+	return file_broler_grpc_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *ServerResponse) GetResponse() string {
+	if x != nil {
+		return x.Response
+	}
+	return ""
+}
+
 var File_broler_grpc_proto protoreflect.FileDescriptor
 
 const file_broler_grpc_proto_rawDesc = "" +
 	"\n" +
 	"\x11broler_grpc.proto\x12\x06broler\"\x0e\n" +
-	"\fFoundLinkArg\"\x97\x01\n" +
+	"\fPagesInfoReq\"\x97\x01\n" +
 	"\x05Paths\x12\x15\n" +
 	"\x06is_end\x18\x01 \x01(\bR\x05isEnd\x12.\n" +
 	"\x05paths\x18\x02 \x03(\v2\x18.broler.Paths.PathsEntryR\x05paths\x1aG\n" +
@@ -170,9 +258,14 @@ const file_broler_grpc_proto_rawDesc = "" +
 	"\x04root\x18\x01 \x03(\v2\x17.broler.Pages.RootEntryR\x04root\x1aF\n" +
 	"\tRootEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12#\n" +
-	"\x05value\x18\x02 \x01(\v2\r.broler.PathsR\x05value:\x028\x012<\n" +
-	"\x06Broler\x122\n" +
-	"\tFoundLink\x12\x14.broler.FoundLinkArg\x1a\r.broler.Pages\"\x00B*Z(github.com/aavtic/broler/rpc/broler_grpcb\x06proto3"
+	"\x05value\x18\x02 \x01(\v2\r.broler.PathsR\x05value:\x028\x01\"%\n" +
+	"\tClientReq\x12\x18\n" +
+	"\arequest\x18\x01 \x01(\tR\arequest\",\n" +
+	"\x0eServerResponse\x12\x1a\n" +
+	"\bresponse\x18\x01 \x01(\tR\bresponse2\x80\x01\n" +
+	"\x06Broler\x123\n" +
+	"\bPageInfo\x12\x14.broler.PagesInfoReq\x1a\r.broler.Pages\"\x000\x01\x12A\n" +
+	"\x0eClientRequests\x12\x11.broler.ClientReq\x1a\x16.broler.ServerResponse\"\x00(\x010\x01B*Z(github.com/aavtic/broler/rpc/broler_grpcb\x06proto3"
 
 var (
 	file_broler_grpc_proto_rawDescOnce sync.Once
@@ -186,23 +279,27 @@ func file_broler_grpc_proto_rawDescGZIP() []byte {
 	return file_broler_grpc_proto_rawDescData
 }
 
-var file_broler_grpc_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_broler_grpc_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_broler_grpc_proto_goTypes = []any{
-	(*FoundLinkArg)(nil), // 0: broler.FoundLinkArg
-	(*Paths)(nil),        // 1: broler.Paths
-	(*Pages)(nil),        // 2: broler.Pages
-	nil,                  // 3: broler.Paths.PathsEntry
-	nil,                  // 4: broler.Pages.RootEntry
+	(*PagesInfoReq)(nil),   // 0: broler.PagesInfoReq
+	(*Paths)(nil),          // 1: broler.Paths
+	(*Pages)(nil),          // 2: broler.Pages
+	(*ClientReq)(nil),      // 3: broler.ClientReq
+	(*ServerResponse)(nil), // 4: broler.ServerResponse
+	nil,                    // 5: broler.Paths.PathsEntry
+	nil,                    // 6: broler.Pages.RootEntry
 }
 var file_broler_grpc_proto_depIdxs = []int32{
-	3, // 0: broler.Paths.paths:type_name -> broler.Paths.PathsEntry
-	4, // 1: broler.Pages.root:type_name -> broler.Pages.RootEntry
+	5, // 0: broler.Paths.paths:type_name -> broler.Paths.PathsEntry
+	6, // 1: broler.Pages.root:type_name -> broler.Pages.RootEntry
 	1, // 2: broler.Paths.PathsEntry.value:type_name -> broler.Paths
 	1, // 3: broler.Pages.RootEntry.value:type_name -> broler.Paths
-	0, // 4: broler.Broler.FoundLink:input_type -> broler.FoundLinkArg
-	2, // 5: broler.Broler.FoundLink:output_type -> broler.Pages
-	5, // [5:6] is the sub-list for method output_type
-	4, // [4:5] is the sub-list for method input_type
+	0, // 4: broler.Broler.PageInfo:input_type -> broler.PagesInfoReq
+	3, // 5: broler.Broler.ClientRequests:input_type -> broler.ClientReq
+	2, // 6: broler.Broler.PageInfo:output_type -> broler.Pages
+	4, // 7: broler.Broler.ClientRequests:output_type -> broler.ServerResponse
+	6, // [6:8] is the sub-list for method output_type
+	4, // [4:6] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name
 	4, // [4:4] is the sub-list for extension extendee
 	0, // [0:4] is the sub-list for field type_name
@@ -219,7 +316,7 @@ func file_broler_grpc_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_broler_grpc_proto_rawDesc), len(file_broler_grpc_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
