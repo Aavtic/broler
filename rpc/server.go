@@ -10,7 +10,7 @@
 
 // package rpc;
 
-package main;
+package broler;
 
 import (
 	"io"
@@ -118,6 +118,7 @@ func (*server) ClientRequests(stream pb.Broler_ClientRequestsServer) error {
 }
 
 func RunServer() {
+	log.Println();
 	listener, err := net.Listen("tcp", ":8080")
 	if err != nil { log.Fatalf("Could not Listen due to %v", err) }
 	
