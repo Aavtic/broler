@@ -21,6 +21,7 @@ export default function Home() {
             let parsed: any;
             try {
                 parsed = JSON.parse(event.data);
+                console.log('json: ', JSON.stringify(parsed))
                 done = true;
             } catch (e) {
                 console.error('Invalid JSON:', event.data);
