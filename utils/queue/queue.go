@@ -40,3 +40,7 @@ func (q *Queue) Peek() any {
 	val := q.values[0]
 	return val
 }
+
+func (q *Queue) Size() int {
+	return len(q.values)
+}

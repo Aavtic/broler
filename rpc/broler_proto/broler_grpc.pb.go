@@ -60,7 +60,8 @@ func (*PagesInfoReq) Descriptor() ([]byte, []int) {
 type Paths struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	IsEnd         bool                   `protobuf:"varint,1,opt,name=is_end,json=isEnd,proto3" json:"is_end,omitempty"`
-	Paths         map[string]*Paths      `protobuf:"bytes,2,rep,name=paths,proto3" json:"paths,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	IsProcessed   string                 `protobuf:"bytes,2,opt,name=is_processed,json=isProcessed,proto3" json:"is_processed,omitempty"`
+	Paths         map[string]*Paths      `protobuf:"bytes,3,rep,name=paths,proto3" json:"paths,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -100,6 +101,13 @@ func (x *Paths) GetIsEnd() bool {
 		return x.IsEnd
 	}
 	return false
+}
+
+func (x *Paths) GetIsProcessed() string {
+	if x != nil {
+		return x.IsProcessed
+	}
+	return ""
 }
 
 func (x *Paths) GetPaths() map[string]*Paths {
@@ -246,10 +254,11 @@ var File_broler_grpc_proto protoreflect.FileDescriptor
 const file_broler_grpc_proto_rawDesc = "" +
 	"\n" +
 	"\x11broler_grpc.proto\x12\x06broler\"\x0e\n" +
-	"\fPagesInfoReq\"\x97\x01\n" +
+	"\fPagesInfoReq\"\xba\x01\n" +
 	"\x05Paths\x12\x15\n" +
-	"\x06is_end\x18\x01 \x01(\bR\x05isEnd\x12.\n" +
-	"\x05paths\x18\x02 \x03(\v2\x18.broler.Paths.PathsEntryR\x05paths\x1aG\n" +
+	"\x06is_end\x18\x01 \x01(\bR\x05isEnd\x12!\n" +
+	"\fis_processed\x18\x02 \x01(\tR\visProcessed\x12.\n" +
+	"\x05paths\x18\x03 \x03(\v2\x18.broler.Paths.PathsEntryR\x05paths\x1aG\n" +
 	"\n" +
 	"PathsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12#\n" +

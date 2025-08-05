@@ -21,7 +21,8 @@ message PagesInfoReq {}
 
 message Paths {
   bool is_end = 1;
-  map<string, Paths> paths = 2;
+  string is_processed = 2;
+  map<string, Paths> paths = 3;
 }
 
 message Pages {

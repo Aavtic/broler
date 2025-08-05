@@ -96,7 +96,7 @@ func main() {
 
 // EXAMPLE DATA
 
-// pages := []*pb.Pages {{
+// pages := *pb.Pages {
 // 		Root: map[string]*pb.Paths{
 // 			"aavtic.dev": {
 // 				IsEnd: false,
@@ -112,38 +112,3 @@ func main() {
 // 			},
 // 		},
 // 	},
-// 	{
-// 		Root: map[string]*pb.Paths{
-// 			"aavtic.dev/broler": {
-// 				IsEnd: false,
-// 				Paths: map[string]*pb.Paths{
-// 					"styles.css": { IsEnd: true, Paths: nil },
-// 					"projects/ass_parser": {
-// 						IsEnd: false,
-// 						Paths: map[string]*pb.Paths{
-// 							"scripts.rs": { IsEnd: true, Paths: nil },
-// 						},
-// 					},
-// 				},
-// 			},
-// 		},
-// 	},
-//
-// 	{
-// 		Root: map[string]*pb.Paths{
-// 			"aavtic.dev/ttype": {
-// 				IsEnd: false,
-// 				Paths: map[string]*pb.Paths{
-// 					"styles.css": { IsEnd: true, Paths: nil },
-// 					"projects/ass_parser": {
-// 						IsEnd: false,
-// 						Paths: map[string]*pb.Paths{
-// 							"scripts.py": { IsEnd: true, Paths: nil },
-// 						},
-// 					},
-// 				},
-// 			},
-// 		},
-// 	},
-//
-// }

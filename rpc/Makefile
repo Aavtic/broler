@@ -1,4 +1,4 @@
-set_env: all
+all: all
 	export PATH="$PATH:$(go env GOPATH)/bin"
 
 compile_proto: broler_grpc.proto
