@@ -28,9 +28,12 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { Info } from "lucide-react";
+import { CircleDotDashed, CircleCheckBig, CircleX } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
+
+import StatusDot from '@/app/components/StatusDot/StatusDot';
 
 export interface TreeViewItem {
   id: string;
@@ -38,6 +41,7 @@ export interface TreeViewItem {
   type: string;
   children?: TreeViewItem[];
   checked?: boolean;
+  status: string;
 }
 
 export interface TreeViewIconMap {
@@ -502,37 +506,38 @@ function TreeItem({
                   )}
                   {renderIcon()}
                   <span className="flex-1">{item.name}</span>
-                  <HoverCard>
-                    <HoverCardTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-6 w-6 p-0 group-hover:opacity-100 opacity-0 items-center justify-center"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <Info className="h-4 w-4 text-muted-foreground" />
-                      </Button>
-                    </HoverCardTrigger>
-                    <HoverCardContent className="w-80">
-                      <div className="space-y-2">
-                        <h4 className="text-sm font-semibold">{item.name}</h4>
-                        <div className="text-sm text-muted-foreground space-y-1">
-                          <div>
-                            <span className="font-medium">Type:</span>{" "}
-                            {item.type.charAt(0).toUpperCase() +
-                              item.type.slice(1).replace("_", " ")}
-                          </div>
-                          <div>
-                            <span className="font-medium">ID:</span> {item.id}
-                          </div>
-                          <div>
-                            <span className="font-medium">Location:</span>{" "}
-                            {getItemPath(item, allItems)}
+                  {/* {item.status && <StatusDot color={"yellow"} />} */}
+                    <HoverCard>
+                      <HoverCardTrigger>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 w-6 p-0 items-center justify-center"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                        {
+                            item.status === "unprocessed" ? <CircleDotDashed color="yellow" />
+                                : item.status === "reachable" ? <CircleCheckBig color="green" /> : <CircleX  color="red" />
+                        }
+                        </Button>
+                      </HoverCardTrigger>
+
+                      <HoverCardContent className="w-80">
+                        <div className="space-y-2">
+                          <h4 className="text-sm font-semibold">{item.status}</h4>
+                          <div className="text-sm text-muted-foreground space-y-1">
+                            <div>
+                              <span className="font-medium">Status:</span>{" "}
+                              {"Loading..."}
+                            </div>
+                            <div>
+                              <span className="font-medium">Info:</span> {"Childen of this item is being loaded"}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </HoverCardContent>
-                  </HoverCard>
+                      </HoverCardContent>
+                    </HoverCard>
+
                 </div>
               )}
             </div>

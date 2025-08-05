@@ -1,6 +1,7 @@
 export interface TreeViewItemB {
     id: string;
     name: string;
+    status: string;
     type: string;
     children?: TreeViewItemB[];
     checked?: boolean;
@@ -8,6 +9,7 @@ export interface TreeViewItemB {
 
 interface PagePath {
     is_end: boolean;
+    is_processed: string;
     paths: { [url: string]: PagePath };
 }
 
@@ -22,14 +24,16 @@ export default function treeify(root: PageRoot) {
         let index: number = 0;
         for (const url in paths) {
             const id = `${parentId}-${index}`;
+            const item = paths[url];
             const node: TreeViewItemB = {
                 id,
                 name: url,
-                type: paths[url].is_end ? "file" : "folder",
+                status: item.is_processed,
+                type: item.is_end ? "file" : "folder",
             }
-            if (!paths[url].is_end) {
-                node.children = dfs(paths[url].paths, id)
-            } 
+            if (!item.is_end) {
+                node.children = dfs(item.paths, id)
+            }
             items.push(node);
             index++;
         }
