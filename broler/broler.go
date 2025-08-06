@@ -34,6 +34,7 @@ var url_queue *queue.Queue = queue.New();
 var global_tree *proto.Pages = &proto.Pages{}; 
 
 func Procedure(url string, root map[string]*proto.Paths, data_channel chan *proto.Pages) {
+	time.Sleep(time.Second * 100000)
 	log.Println("INFO: ", "Processing url: ", url)
 	log.Println("INFO: ", "Worker Queue:: ")
 	url_queue.Print()

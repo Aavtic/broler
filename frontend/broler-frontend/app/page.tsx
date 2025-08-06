@@ -7,13 +7,47 @@ import { defaultTree } from '@/app/components/PageTree/PageTree';
 import { TreeViewItemB } from './utils/treeify';
 
 import { InputWithButton } from '@/components/input_field/InputWithButton';
+import AlertBox from '@/components/AlertBox/AlertBox'
+
+
+
+interface onClickProps {
+    url: string,
+}
+async function sendReq({url} : onClickProps) {
+    const response = await sendRequest(url);
+    console.log(response)
+}
 
 function getTreeViewItemArray(json: any) {
     return treeify(json)
 }
 
+async function sendRequest(request: string) {
+    const response =  await fetch('/api/live',
+        {
+            "method": "POST",
+            "headers": {
+                "Content-Type": "application/json",
+            },
+            "body": JSON.stringify({message: request})
+        }
+    );
+    return response.json()
+}
+
 export default function Home() {
     const [data, setData] = useState<TreeViewItemB[]>(defaultTree);
+    const [inputUrl, setInputUrl] = useState<string>('');
+
+
+    function initiateNewSearch(result: "cancel" | "continue") {
+        if (result === "cancel") return;
+        if (result === "continue") {
+            console.log('initiating search')
+            sendReq({url: inputUrl})
+        }
+    }
 
     useEffect(() => {
         const eventSource = new EventSource('/api/live');
@@ -49,12 +83,17 @@ export default function Home() {
         };
     }, []);
 
+    const on_change = (e: any) => {
+        setInputUrl(e.target.value)
+    }
+    
+
     return (
         <>
 
 <div className="min-h-screen flex flex-col items-center px-4 pt-20 pb-32 space-y-16">
   {/* Input at top */}
-  <InputWithButton />
+  <InputWithButton on_change={on_change} func={initiateNewSearch}/>
 
   {/* Scrollable PageTree container */}
   <div className="flex justify-center w-full max-w-4xl">

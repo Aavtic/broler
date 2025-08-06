@@ -13,11 +13,12 @@
 package rpc
 
 import (
-	pb "github.com/aavtic/broler/rpc/broler_proto"
-	"google.golang.org/grpc"
-	"io"
 	"log"
 	"net"
+	"context"
+
+	"google.golang.org/grpc"
+	pb "github.com/aavtic/broler/rpc/broler_proto"
 )
 
 type server struct {
@@ -45,23 +46,13 @@ func (s *server) PageInfo(req *pb.PagesInfoReq, stream pb.Broler_PageInfoServer)
 	return nil
 }
 
-func (*server) ClientRequests(stream pb.Broler_ClientRequestsServer) error {
-	for {
-		client_request, err := stream.Recv()
+func (*server) ClientRequests(_ context.Context, client_req *pb.ClientReq) (*pb.ServerResponse, error) {
+	request := client_req.Request;
+	log.Println("INFO: ", "Client Request: ", request)
 
-		if err == io.EOF {
-			return nil
-		}
-
-		if err != nil {
-			return err
-		}
-
-		log.Println("CLIENT REQUEST: ", client_request.Request)
-		stream.Send(&pb.ServerResponse{
-			Response: "Coming right up!",
-		})
-	}
+	return &pb.ServerResponse {
+		Response: "Coming up!",
+	}, nil
 }
 
 func RunServer(data_channel chan *pb.Pages) {

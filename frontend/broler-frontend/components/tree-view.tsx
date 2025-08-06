@@ -457,7 +457,7 @@ function TreeItem({
                     </HoverCardTrigger>
                       <HoverCardContent className="w-80">
                         <div className="space-y-2">
-                          <h4 className="text-sm font-semibold">{item.name.slice(0, 15)}</h4>
+                          <h4 className="text-sm font-semibold">{item.name.slice(0, 60)}</h4>
                           <div className="text-sm text-muted-foreground space-y-1">
                             <div>
 
