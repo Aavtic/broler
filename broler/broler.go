@@ -21,7 +21,7 @@ import (
 
 func is_page_reachable(url string) bool {
 	// TODO: cache the response for future use
-	time.Sleep(time.Second * 2)
+	time.Sleep(time.Second * 3)
 	_ , err := client.GetBody(url)
 	if err != nil {
 		log.Println("Could not GET ", url, " due to ", err)
