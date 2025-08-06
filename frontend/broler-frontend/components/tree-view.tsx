@@ -431,7 +431,8 @@ function TreeItem({
                     </div>
                   )}
                   {renderIcon()}
-                  <span className="flex-1">{item.name}</span>
+                  <span className={`flex-1 ${item.status === "reachable" ? "text-green-500" : ""}`}>{item.name}</span>
+
                   {selectedCount !== null && selectedCount > 0 && (
                     <Badge
                       variant="secondary"
@@ -445,35 +446,32 @@ function TreeItem({
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-6 w-6 p-0 group-hover:opacity-100 opacity-0 items-center justify-center"
+                        className="h-6 w-6 p-0  opacity-100 items-center justify-center"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        <Info className="h-4 w-4 text-muted-foreground" />
+                        {
+                            item.status === "unprocessed" ? <CircleDotDashed color="yellow" />
+                                : item.status === "reachable" ? <CircleCheckBig color="green" /> : <CircleX  color="red" />
+                        }
                       </Button>
                     </HoverCardTrigger>
-                    <HoverCardContent className="w-80">
-                      <div className="space-y-2">
-                        <h4 className="text-sm font-semibold">{item.name}</h4>
-                        <div className="text-sm text-muted-foreground space-y-1">
-                          <div>
-                            <span className="font-medium">Type:</span>{" "}
-                            {item.type.charAt(0).toUpperCase() +
-                              item.type.slice(1).replace("_", " ")}
-                          </div>
-                          <div>
-                            <span className="font-medium">ID:</span> {item.id}
-                          </div>
-                          <div>
-                            <span className="font-medium">Location:</span>{" "}
-                            {getItemPath(item, allItems)}
-                          </div>
-                          <div>
-                            <span className="font-medium">Items:</span>{" "}
-                            {item.children?.length || 0} direct items
+                      <HoverCardContent className="w-80">
+                        <div className="space-y-2">
+                          <h4 className="text-sm font-semibold">{item.name.slice(0, 15)}</h4>
+                          <div className="text-sm text-muted-foreground space-y-1">
+                            <div>
+
+                              <span className="font-medium">Status:</span>
+                              {
+                                  item.status === "unprocessed" ? "Link is not checked yet"
+                                    : item.status === "reachable" ? "Link is reachable!" : "Link is not reachable!"
+                              }
+                            </div>
+                            <div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </HoverCardContent>
+                      </HoverCardContent>
                   </HoverCard>
                 </div>
               ) : (
@@ -505,7 +503,10 @@ function TreeItem({
                     </div>
                   )}
                   {renderIcon()}
-                  <span className="flex-1">{item.name}</span>
+                  <span className={`flex-1 ${
+                      (item.status === "unprocessed") ? "text-yellow-200"
+                        : (item.status === "reachable") ? "text-green-200" : "text-red-500"
+                  }`}>{item.name}</span>
                   {/* {item.status && <StatusDot color={"yellow"} />} */}
                     <HoverCard>
                       <HoverCardTrigger>
@@ -524,14 +525,16 @@ function TreeItem({
 
                       <HoverCardContent className="w-80">
                         <div className="space-y-2">
-                          <h4 className="text-sm font-semibold">{item.status}</h4>
+                          <h4 className="text-sm font-semibold">{item.name.slice(0, 15)}</h4>
                           <div className="text-sm text-muted-foreground space-y-1">
                             <div>
-                              <span className="font-medium">Status:</span>{" "}
-                              {"Loading..."}
+                              <span className="font-medium">Status:</span>
+                              {
+                                  item.status === "unprocessed" ? "Link is not checked yet"
+                                    : item.status === "reachable" ? "Link is reachable!" : "Link is not reachable!"
+                              }
                             </div>
                             <div>
-                              <span className="font-medium">Info:</span> {"Childen of this item is being loaded"}
                             </div>
                           </div>
                         </div>

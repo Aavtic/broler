@@ -6,6 +6,7 @@ import  PageTree from './components/PageTree/PageTree';
 import { defaultTree } from '@/app/components/PageTree/PageTree';
 import { TreeViewItemB } from './utils/treeify';
 
+import { InputWithButton } from '@/components/input_field/InputWithButton';
 
 function getTreeViewItemArray(json: any) {
     return treeify(json)
@@ -50,8 +51,20 @@ export default function Home() {
 
     return (
         <>
-            <h1>Server Data:</h1>
-            <PageTree data={data} />
+
+<div className="min-h-screen flex flex-col items-center px-4 pt-20 pb-32 space-y-16">
+  {/* Input at top */}
+  <InputWithButton />
+
+  {/* Scrollable PageTree container */}
+  <div className="flex justify-center w-full max-w-4xl">
+    <div className="max-h-[70vh] w-fit overflow-y-auto border rounded p-4">
+      <PageTree data={data} />
+    </div>
+  </div>
+</div>
+
+
         </>
     );
 }
