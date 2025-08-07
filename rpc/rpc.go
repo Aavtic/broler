@@ -13,17 +13,17 @@
 package rpc
 
 import (
+	"context"
 	"log"
 	"net"
-	"context"
 
-	"google.golang.org/grpc"
+	broler "github.com/aavtic/broler/broler/broler_funcs"
 	pb "github.com/aavtic/broler/rpc/broler_proto"
+	"google.golang.org/grpc"
 )
 
 type server struct {
 	pb.UnimplementedBrolerServer
-	data_chan chan *pb.Pages
 }
 
 // {
@@ -35,8 +35,13 @@ type server struct {
 // }
 
 func (s *server) PageInfo(req *pb.PagesInfoReq, stream pb.Broler_PageInfoServer) error {
-	log.Println("Connection came")
-	for page := range s.data_chan {
+	url := req.Url
+	log.Println("INFO: ", "URL:", url)
+
+	data_chan := make(chan *pb.Pages)
+	go broler.Broler(url, data_chan)
+
+	for page := range data_chan {
 		log.Println(page)
 		if err := stream.Send(page); err != nil {
 			return err
@@ -47,15 +52,19 @@ func (s *server) PageInfo(req *pb.PagesInfoReq, stream pb.Broler_PageInfoServer)
 }
 
 func (*server) ClientRequests(_ context.Context, client_req *pb.ClientReq) (*pb.ServerResponse, error) {
-	request := client_req.Request;
-	log.Println("INFO: ", "Client Request: ", request)
+	log.Println("INFO: ", "Client Request: ", client_req)
 
-	return &pb.ServerResponse {
+	// switch method := client_req.Method; method { case "broler":
+	// 	url := client_req.Request
+	// 	broler.Broler(url)
+	// }
+
+	return &pb.ServerResponse{
 		Response: "Coming up!",
 	}, nil
 }
 
-func RunServer(data_channel chan *pb.Pages) {
+func RunServer() {
 	listener, err := net.Listen("tcp", ":50051")
 	if err != nil {
 		log.Fatalf("Could not Listen due to %v", err)
@@ -63,7 +72,7 @@ func RunServer(data_channel chan *pb.Pages) {
 	log.Println("[+] Server up and running...")
 
 	gRPC_server := grpc.NewServer()
-	pb.RegisterBrolerServer(gRPC_server, &server{data_chan: data_channel})
+	pb.RegisterBrolerServer(gRPC_server, &server{})
 
 	if err := gRPC_server.Serve(listener); err != nil {
 		log.Fatalf("Could not server due to %v", err)
