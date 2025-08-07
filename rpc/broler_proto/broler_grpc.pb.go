@@ -23,6 +23,7 @@ const (
 
 type PagesInfoReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	Url           string                 `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -55,6 +56,13 @@ func (x *PagesInfoReq) ProtoReflect() protoreflect.Message {
 // Deprecated: Use PagesInfoReq.ProtoReflect.Descriptor instead.
 func (*PagesInfoReq) Descriptor() ([]byte, []int) {
 	return file_broler_grpc_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *PagesInfoReq) GetUrl() string {
+	if x != nil {
+		return x.Url
+	}
+	return ""
 }
 
 type Paths struct {
@@ -163,7 +171,8 @@ func (x *Pages) GetRoot() map[string]*Paths {
 
 type ClientReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Request       string                 `protobuf:"bytes,1,opt,name=request,proto3" json:"request,omitempty"`
+	Method        string                 `protobuf:"bytes,1,opt,name=method,proto3" json:"method,omitempty"`
+	Request       string                 `protobuf:"bytes,2,opt,name=request,proto3" json:"request,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -196,6 +205,13 @@ func (x *ClientReq) ProtoReflect() protoreflect.Message {
 // Deprecated: Use ClientReq.ProtoReflect.Descriptor instead.
 func (*ClientReq) Descriptor() ([]byte, []int) {
 	return file_broler_grpc_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *ClientReq) GetMethod() string {
+	if x != nil {
+		return x.Method
+	}
+	return ""
 }
 
 func (x *ClientReq) GetRequest() string {
@@ -253,8 +269,9 @@ var File_broler_grpc_proto protoreflect.FileDescriptor
 
 const file_broler_grpc_proto_rawDesc = "" +
 	"\n" +
-	"\x11broler_grpc.proto\x12\x06broler\"\x0e\n" +
-	"\fPagesInfoReq\"\xba\x01\n" +
+	"\x11broler_grpc.proto\x12\x06broler\" \n" +
+	"\fPagesInfoReq\x12\x10\n" +
+	"\x03url\x18\x01 \x01(\tR\x03url\"\xba\x01\n" +
 	"\x05Paths\x12\x15\n" +
 	"\x06is_end\x18\x01 \x01(\bR\x05isEnd\x12!\n" +
 	"\fis_processed\x18\x02 \x01(\tR\visProcessed\x12.\n" +
@@ -267,14 +284,15 @@ const file_broler_grpc_proto_rawDesc = "" +
 	"\x04root\x18\x01 \x03(\v2\x17.broler.Pages.RootEntryR\x04root\x1aF\n" +
 	"\tRootEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12#\n" +
-	"\x05value\x18\x02 \x01(\v2\r.broler.PathsR\x05value:\x028\x01\"%\n" +
-	"\tClientReq\x12\x18\n" +
-	"\arequest\x18\x01 \x01(\tR\arequest\",\n" +
+	"\x05value\x18\x02 \x01(\v2\r.broler.PathsR\x05value:\x028\x01\"=\n" +
+	"\tClientReq\x12\x16\n" +
+	"\x06method\x18\x01 \x01(\tR\x06method\x12\x18\n" +
+	"\arequest\x18\x02 \x01(\tR\arequest\",\n" +
 	"\x0eServerResponse\x12\x1a\n" +
-	"\bresponse\x18\x01 \x01(\tR\bresponse2\x80\x01\n" +
+	"\bresponse\x18\x01 \x01(\tR\bresponse2|\n" +
 	"\x06Broler\x123\n" +
-	"\bPageInfo\x12\x14.broler.PagesInfoReq\x1a\r.broler.Pages\"\x000\x01\x12A\n" +
-	"\x0eClientRequests\x12\x11.broler.ClientReq\x1a\x16.broler.ServerResponse\"\x00(\x010\x01B*Z(github.com/aavtic/broler/rpc/broler_grpcb\x06proto3"
+	"\bPageInfo\x12\x14.broler.PagesInfoReq\x1a\r.broler.Pages\"\x000\x01\x12=\n" +
+	"\x0eClientRequests\x12\x11.broler.ClientReq\x1a\x16.broler.ServerResponse\"\x00B*Z(github.com/aavtic/broler/rpc/broler_grpcb\x06proto3"
 
 var (
 	file_broler_grpc_proto_rawDescOnce sync.Once

@@ -1,12 +1,13 @@
 // app/api/live/route.ts
-import { NextRequest } from 'next/server';
+import {NextRequest, NextResponse } from 'next/server';
 import { client } from '@/app/lib/grpcClient';
 
 export async function GET(req: NextRequest) {
+    const { searchParams } = new URL(req.url);
+    const url = searchParams.get('url')
     const stream = new ReadableStream({
         start(controller) {
-            const grpcStream = client.PageInfo({}); // your gRPC stream
-
+            const grpcStream = client.PageInfo({url: url}); // your gRPC stream
             grpcStream.on('data', (data: any) => {
                 const message = `data: ${JSON.stringify(data)}\n\n`;
                 controller.enqueue(new TextEncoder().encode(message));
@@ -37,3 +38,17 @@ export async function GET(req: NextRequest) {
     });
 }
 
+export async function POST(req: NextRequest) {
+    const request = await req.json();
+    const message = request["message"]
+    const res = await new Promise((resolve, reject) => {
+        client.ClientRequests({ request: message }, (err: any, response: any) => {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(response)
+            }
+        })
+    })
+    return NextResponse.json({message: res}, { status: 200 })
+}

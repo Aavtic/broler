@@ -47,6 +47,7 @@ export const defaultTree = [{
     id: "0",
     name: "Loading...",
     type: "file",
+    status: "unprocessed",
     children: [],
 }];
 
