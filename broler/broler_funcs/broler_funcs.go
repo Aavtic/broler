@@ -65,10 +65,12 @@ func Procedure(url string, root map[string]*proto.Paths, data_channel chan *prot
 		// path.IsProcessed = "unprocessed"
 		// path.Paths = make(map[string]*proto.Paths)
 		// root[url] = path
-		root[url] = &proto.Paths {
-			IsEnd: true,
-			IsProcessed: "unprocessed",
-			Paths: make(map[string]*proto.Paths),
+		if _, exists := root[url]; !exists {
+			root[url] = &proto.Paths {
+				IsEnd: true,
+				IsProcessed: "unprocessed",
+				Paths: make(map[string]*proto.Paths),
+			}
 		}
 	}
 
@@ -83,11 +85,19 @@ func Procedure(url string, root map[string]*proto.Paths, data_channel chan *prot
 	for range queue_size {
 		url := url_queue.Dequeue().(string)
 		if is_page_reachable(url) {
-			root[url].IsEnd = false
-			root[url].IsProcessed = "reachable"
-			url_queue.Enqueue(url)
+			if entry := root[url]; entry != nil {
+				root[url].IsEnd = false
+				root[url].IsProcessed = "reachable"
+				url_queue.Enqueue(url)
+			} else {
+				log.Printf("Skipping %s because it is already nil", url)
+			}
 		} else {
-			root[url].IsProcessed = "unreachable"
+			if entry := root[url]; entry != nil {
+				root[url].IsProcessed = "unreachable"
+			} else {
+				log.Printf("Skipping %s because it is already nil", url)
+			}
 		}
 
 		// send the data
