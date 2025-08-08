@@ -105,7 +105,6 @@ func Procedure(url string, root map[string]*proto.Paths, data_channel chan *prot
 			log.Printf("WARN: root[%s] or root[%s].Paths is nil for url: %s", url, url, url)
 		}
 	}
-
 }
 
 func Broler(url string, data_channel chan *proto.Pages) {
