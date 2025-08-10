@@ -5,9 +5,9 @@ import  PageTree from './components/PageTree/PageTree';
 import { defaultTree } from '@/app/components/PageTree/PageTree';
 import { TreeViewItemB } from './utils/treeify';
 
-import { InputWithButton } from '@/components/input_field/InputWithButton';
-import GetPages from '@/app/utils/getPages'
+import InputButtonAndSettings from '@/components/InputButtonAndSettings/InputButtonAndSettings'
 
+import GetPages from '@/app/utils/getPages'
 
 // interface onClickProps {
 //     url: string,
@@ -35,6 +35,9 @@ export default function Home() {
     const [data, setData] = useState<TreeViewItemB[]>(defaultTree);
     const [inputUrl, setInputUrl] = useState<string>('');
     const [URL, setURL] = useState<string>('');
+    const [onlySearchGivenDomain, setOnlySearchGivenDomain] = useState<boolean>(true);
+    const [ignoreJSearch, setIgnoreJSearch] = useState<boolean>(false);
+    const [ignoreCSSearch, setCSSearch] = useState<boolean>(true);
 
 
     function initiateNewSearch(result: "cancel" | "continue") {
@@ -50,6 +53,10 @@ export default function Home() {
 
         const cleanUp = GetPages(inputUrl, setData)
 
+        console.log(onlySearchGivenDomain)
+        console.log(ignoreJSearch)
+        console.log(ignoreCSSearch)
+
         return () => {
             cleanUp?.()
         }
@@ -60,23 +67,41 @@ export default function Home() {
         setInputUrl(e.target.value)
     }
     
+          // <InputWithButton on_change={on_change} func={initiateNewSearch}/>
+          // <Settings 
+          //   currentDomain = {onlySearchGivenDomain}
+          //   jsSearch = {ignoreJSearch}
+          //   cssSearch = {ignoreCSSearch}
+          //   onlyCurrentDomain={setOnlySearchGivenDomain}
+          //   setJSearch={setCSSearch}
+          //   setCSSearch={setIgnoreJSearch}
+          // />
 
     return (
         <>
-
-<div className="min-h-screen flex flex-col items-center px-4 pt-20 pb-32 space-y-16">
-  {/* Input at top */}
-  <InputWithButton on_change={on_change} func={initiateNewSearch}/>
-
-  {/* Scrollable PageTree container */}
-  <div className="flex justify-center w-full max-w-4xl">
-    <div className="max-h-[70vh] w-fit overflow-y-auto border rounded p-4">
-      <PageTree data={data} />
-    </div>
-  </div>
-</div>
-
-
+        <div className="min-h-screen flex flex-col items-center px-4 pt-20 pb-32 space-y-16">
+          {/* Input at top */}
+          <InputButtonAndSettings 
+            input_with_button_props={{
+                on_change:on_change,
+                func:initiateNewSearch,
+            }}
+            settings_props={{
+                currentDomain: onlySearchGivenDomain,
+                jsSearch: ignoreJSearch,
+                cssSearch: ignoreCSSearch,
+                onlyCurrentDomain: setOnlySearchGivenDomain,
+                setJSearch: setIgnoreJSearch,
+                setCSSearch: setCSSearch,
+            }}
+          />
+          {/* Scrollable PageTree container */}
+          <div className="flex justify-center w-full max-w-4xl">
+            <div className="max-h-[70vh] w-fit overflow-y-auto border rounded p-4">
+              <PageTree data={data} />
+            </div>
+          </div>
+        </div>
         </>
     );
 }

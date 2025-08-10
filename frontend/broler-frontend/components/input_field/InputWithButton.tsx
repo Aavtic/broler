@@ -8,7 +8,7 @@ import { useState } from 'react';
 
 import { ShineBorder } from '@/components/magicui/shine-border'
 
-interface InputWithButtonProps {
+export interface InputWithButtonProps {
     on_change: any,
     func: any,
 }
