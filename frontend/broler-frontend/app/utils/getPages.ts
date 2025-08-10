@@ -1,8 +1,13 @@
-import treeify from './treeify'; 
+import treeify from './treeify';
 import { TreeViewItemB } from './treeify';
 
-export default function GetPages(url: string, setData: React.Dispatch<React.SetStateAction<TreeViewItemB[]>>) {
-    const eventSource = new EventSource(`/api/live?url=${encodeURIComponent(url)}`);
+export default function GetPages(settings: {
+    url: string,
+    onlySearchDomain: boolean,
+    ignoreJSearch: boolean,
+    ignoreCSSearch: boolean,
+}, setData: React.Dispatch<React.SetStateAction<TreeViewItemB[]>>) {
+    const eventSource = new EventSource(`/api/live?url=${encodeURIComponent(settings.url)}&onlySearchDomain=${encodeURIComponent(settings.onlySearchDomain)}&ignoreJSearch=${encodeURIComponent(settings.ignoreJSearch)}&ignoreCSSearch=${encodeURIComponent(settings.ignoreCSSearch)}`);
     eventSource.onmessage = (event) => {
         let done: boolean = false;
         let parsed: any;
@@ -19,7 +24,7 @@ export default function GetPages(url: string, setData: React.Dispatch<React.SetS
                 const array = treeify(parsed);
                 console.log(array);
                 setData(array);
-            } catch(e) {
+            } catch (e) {
                 console.error('Error while processing data: ', e);
             }
         }

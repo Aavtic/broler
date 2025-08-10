@@ -32,7 +32,7 @@ func is_page_reachable(url string) bool {
 
 var url_queue *queue.Queue = queue.New();
 
-func Procedure(url string, root map[string]*proto.Paths, data_channel chan *proto.Pages, global_tree *proto.Pages) {
+func Procedure(url string, root map[string]*proto.Paths, data_channel chan *proto.Pages, global_tree *proto.Pages, opts BrolerOptions) {
 	log.Println("INFO: ", "Processing url: ", url)
 	log.Println("INFO: ", "Worker Queue:: ")
 	url_queue.Print()
@@ -117,11 +117,18 @@ func Procedure(url string, root map[string]*proto.Paths, data_channel chan *prot
 	}
 }
 
-func Broler(url string, data_channel chan *proto.Pages) {
+type BrolerOptions struct {
+	Url string
+  OnlySearchDomain bool
+  IgnoreJSearch bool
+  IgnoreCSSearch bool
+}
+
+func Broler(opts BrolerOptions, data_channel chan *proto.Pages) {
 	var global_tree *proto.Pages = &proto.Pages{}; 
 	global_tree = &proto.Pages{
 		Root: make(map[string] *proto.Paths),
 	}
 
-	Procedure(url, global_tree.Root, data_channel, global_tree);
+	Procedure(opts.Url, global_tree.Root, data_channel, global_tree, opts);
 }

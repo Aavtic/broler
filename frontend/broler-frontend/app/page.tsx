@@ -34,16 +34,23 @@ import GetPages from '@/app/utils/getPages'
 export default function Home() {
     const [data, setData] = useState<TreeViewItemB[]>(defaultTree);
     const [inputUrl, setInputUrl] = useState<string>('');
-    const [URL, setURL] = useState<string>('');
+    const [startSearch, setStartSearch] = useState<boolean>(false);
     const [onlySearchGivenDomain, setOnlySearchGivenDomain] = useState<boolean>(true);
     const [ignoreJSearch, setIgnoreJSearch] = useState<boolean>(false);
     const [ignoreCSSearch, setCSSearch] = useState<boolean>(true);
+
+    const settingsProps = {
+        url: inputUrl,
+        onlySearchDomain: onlySearchGivenDomain,
+        ignoreJSearch: ignoreJSearch,
+        ignoreCSSearch: ignoreCSSearch,
+    }
 
 
     function initiateNewSearch(result: "cancel" | "continue") {
         if (result === "cancel") return;
         if (result === "continue") {
-            setURL(inputUrl)
+            setStartSearch(!startSearch);
         }
     }
 
@@ -51,7 +58,7 @@ export default function Home() {
         console.log('in use effect');
         if (inputUrl === '') return;
 
-        const cleanUp = GetPages(inputUrl, setData)
+        const cleanUp = GetPages(settingsProps, setData)
 
         console.log(onlySearchGivenDomain)
         console.log(ignoreJSearch)
@@ -61,7 +68,7 @@ export default function Home() {
             cleanUp?.()
         }
 
-    }, [URL]);
+    }, [startSearch]);
 
     const on_change = (e: any) => {
         setInputUrl(e.target.value)

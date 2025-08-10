@@ -9,9 +9,9 @@ interface InputButtonAndSettingsProps {
 
 export default function InputButtonAndSettings(props: InputButtonAndSettingsProps) {
     return (
-        <>
+        <div className="flex items-center gap-4">
         <InputWithButton {...props.input_with_button_props}/>
         <Settings {...props.settings_props} />
-        </>
+        </div>
     )
 }
