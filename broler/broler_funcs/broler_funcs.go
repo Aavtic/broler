@@ -7,6 +7,8 @@ import (
 	"github.com/aavtic/broler/parsing"
 	proto "github.com/aavtic/broler/rpc/broler_proto"
 	"github.com/aavtic/broler/utils/queue"
+
+	"net/url"
 )
 
 
@@ -28,6 +30,32 @@ func is_page_reachable(url string) bool {
 		return false;
 	}
 	return true;
+}
+
+func get_domain(input_url string) (string, error) {
+	parsed, err := url.Parse(input_url)
+	if err != nil {
+		return "", err
+	}
+	return parsed.Hostname(), nil
+}
+
+func is_urls_same_domain(a_url, b_url string) bool {
+	a_domain, err := get_domain(a_url)
+	if err != nil {
+		log.Printf("Could not parse URL: %s due to %s", a_url, err)
+		return false
+	}
+	b_domain, err := get_domain(b_url)
+	if err != nil {
+		log.Printf("Could not parse URL: %s due to %s", b_url, err)
+		return false
+	}
+	if a_domain == b_domain {
+		return true
+	}
+
+	return false
 }
 
 var url_queue *queue.Queue = queue.New();
@@ -58,6 +86,15 @@ func Procedure(url string, root map[string]*proto.Paths, data_channel chan *prot
 	// update the global tree
 
 	for _, url := range urls {
+		if opts.OnlySearchDomain {
+			// TODO:
+			// calling this multiple times may be expensive
+			// opts.Urls is constant
+			if !is_urls_same_domain(url, opts.Url) {
+				log.Printf("INFO: Skipping %s because they have the same domain", url)
+				continue
+			}
+		}
 		url_queue.Enqueue(url)
 		// Allocate path in the heap as it is required out of this scope
 		// path := new(proto.Paths)
@@ -110,7 +147,7 @@ func Procedure(url string, root map[string]*proto.Paths, data_channel chan *prot
 		url := url_queue.Dequeue().(string)
 
 		if root[url] != nil && root[url].Paths != nil {
-			Procedure(url, root[url].Paths, data_channel, global_tree)
+			Procedure(url, root[url].Paths, data_channel, global_tree, opts)
 		} else {
 			log.Printf("WARN: root[%s] or root[%s].Paths is nil for url: %s", url, url, url)
 		}
