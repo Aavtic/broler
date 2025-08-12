@@ -38,7 +38,7 @@ func (s *server) PageInfo(req *pb.PagesInfoReq, stream pb.Broler_PageInfoServer)
 	log.Println("INFO: ", "URL:", req.Url)
 	log.Println("INFO: ", "OnlySearchDomain:", req.OnlySearchDomain)
 	log.Println("INFO: ", "IgnoreJSearch:", req.IgnoreJSearch)
-	log.Println("INFO: ", "IgnoreCSSearch:", req.IgnoreCSSearch, "\n", "")
+	log.Println("INFO: ", "IgnoreCSSearch:", req.IgnoreCSSearch)
 
 	data_chan := make(chan *pb.Pages)
 	go broler.Broler(broler.BrolerOptions{

@@ -9,6 +9,7 @@ import (
 	"github.com/aavtic/broler/utils/queue"
 
 	"net/url"
+	"path"
 )
 
 
@@ -95,6 +96,17 @@ func Procedure(url string, root map[string]*proto.Paths, data_channel chan *prot
 				continue
 			}
 		}
+
+		if opts.IgnoreJSearch || opts.IgnoreCSSearch {
+			ext := path.Ext(url)
+			if opts.IgnoreJSearch && ext == ".js" {
+				continue
+			}
+			if opts.IgnoreCSSearch && ext == ".css" {
+				continue
+			}
+		}
+
 		url_queue.Enqueue(url)
 		// Allocate path in the heap as it is required out of this scope
 		// path := new(proto.Paths)
