@@ -35,11 +35,18 @@ type server struct {
 // }
 
 func (s *server) PageInfo(req *pb.PagesInfoReq, stream pb.Broler_PageInfoServer) error {
-	url := req.Url
-	log.Println("INFO: ", "URL:", url)
+	log.Println("INFO: ", "URL:", req.Url)
+	log.Println("INFO: ", "OnlySearchDomain:", req.OnlySearchDomain)
+	log.Println("INFO: ", "IgnoreJSearch:", req.IgnoreJSearch)
+	log.Println("INFO: ", "IgnoreCSSearch:", req.IgnoreCSSearch, "\n", "")
 
 	data_chan := make(chan *pb.Pages)
-	go broler.Broler(url, data_chan)
+	go broler.Broler(broler.BrolerOptions{
+		Url: req.Url,
+		OnlySearchDomain: req.OnlySearchDomain,
+		IgnoreJSearch: req.IgnoreJSearch,
+		IgnoreCSSearch: req.IgnoreCSSearch,
+	}, data_chan)
 
 	for page := range data_chan {
 		log.Println(page)

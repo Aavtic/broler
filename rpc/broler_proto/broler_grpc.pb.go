@@ -22,10 +22,13 @@ const (
 )
 
 type PagesInfoReq struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Url           string                 `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	Url              string                 `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`
+	OnlySearchDomain bool                   `protobuf:"varint,2,opt,name=onlySearchDomain,proto3" json:"onlySearchDomain,omitempty"`
+	IgnoreJSearch    bool                   `protobuf:"varint,3,opt,name=ignoreJSearch,proto3" json:"ignoreJSearch,omitempty"`
+	IgnoreCSSearch   bool                   `protobuf:"varint,4,opt,name=ignoreCSSearch,proto3" json:"ignoreCSSearch,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
 }
 
 func (x *PagesInfoReq) Reset() {
@@ -63,6 +66,27 @@ func (x *PagesInfoReq) GetUrl() string {
 		return x.Url
 	}
 	return ""
+}
+
+func (x *PagesInfoReq) GetOnlySearchDomain() bool {
+	if x != nil {
+		return x.OnlySearchDomain
+	}
+	return false
+}
+
+func (x *PagesInfoReq) GetIgnoreJSearch() bool {
+	if x != nil {
+		return x.IgnoreJSearch
+	}
+	return false
+}
+
+func (x *PagesInfoReq) GetIgnoreCSSearch() bool {
+	if x != nil {
+		return x.IgnoreCSSearch
+	}
+	return false
 }
 
 type Paths struct {
@@ -269,9 +293,12 @@ var File_broler_grpc_proto protoreflect.FileDescriptor
 
 const file_broler_grpc_proto_rawDesc = "" +
 	"\n" +
-	"\x11broler_grpc.proto\x12\x06broler\" \n" +
+	"\x11broler_grpc.proto\x12\x06broler\"\x9a\x01\n" +
 	"\fPagesInfoReq\x12\x10\n" +
-	"\x03url\x18\x01 \x01(\tR\x03url\"\xba\x01\n" +
+	"\x03url\x18\x01 \x01(\tR\x03url\x12*\n" +
+	"\x10onlySearchDomain\x18\x02 \x01(\bR\x10onlySearchDomain\x12$\n" +
+	"\rignoreJSearch\x18\x03 \x01(\bR\rignoreJSearch\x12&\n" +
+	"\x0eignoreCSSearch\x18\x04 \x01(\bR\x0eignoreCSSearch\"\xba\x01\n" +
 	"\x05Paths\x12\x15\n" +
 	"\x06is_end\x18\x01 \x01(\bR\x05isEnd\x12!\n" +
 	"\fis_processed\x18\x02 \x01(\tR\visProcessed\x12.\n" +

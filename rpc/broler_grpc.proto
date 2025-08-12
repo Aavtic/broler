@@ -11,6 +11,9 @@ service Broler {
 
 message PagesInfoReq {
   string url = 1;
+  bool onlySearchDomain = 2;
+  bool ignoreJSearch = 3;
+  bool ignoreCSSearch = 4;
 }
 
 // {
