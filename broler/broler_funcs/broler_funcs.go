@@ -2,14 +2,14 @@ package broler;
 
 import (
 	"log"
-	"time"
-	"github.com/aavtic/broler/networking/client"
-	"github.com/aavtic/broler/parsing"
-	proto "github.com/aavtic/broler/rpc/broler_proto"
-	"github.com/aavtic/broler/utils/queue"
-
-	"net/url"
 	"path"
+	"time"
+	"slices"
+	"net/url"
+	"github.com/aavtic/broler/parsing"
+	"github.com/aavtic/broler/utils/queue"
+	"github.com/aavtic/broler/networking/client"
+	proto "github.com/aavtic/broler/rpc/broler_proto"
 )
 
 
@@ -87,7 +87,24 @@ func Procedure(url string, root map[string]*proto.Paths, data_channel chan *prot
 	// update the global tree
 
 	for _, url := range urls {
-		if opts.OnlySearchDomain {
+		// CHECKS FOR FILTERING URLS
+		var top_priority bool = false
+
+		if len(opts.UrlsData.DisAllowedUrls) > 0 {
+			if slices.Contains(opts.UrlsData.DisAllowedUrls, url) {
+				continue
+			}
+		}
+
+		if len(opts.UrlsData.AllowedUrls) > 0 {
+			if slices.Contains(opts.UrlsData.AllowedUrls, url) {
+				// Top priority
+				log.Println("Top priority for ", url)
+				top_priority = true
+			}
+		}
+
+		if !top_priority && opts.OnlySearchDomain {
 			// TODO:
 			// calling this multiple times may be expensive
 			// opts.Urls is constant
@@ -97,7 +114,7 @@ func Procedure(url string, root map[string]*proto.Paths, data_channel chan *prot
 			}
 		}
 
-		if opts.IgnoreJSearch || opts.IgnoreCSSearch {
+		if !top_priority && (opts.IgnoreJSearch || opts.IgnoreCSSearch) {
 			ext := path.Ext(url)
 			if opts.IgnoreJSearch && ext == ".js" {
 				continue
@@ -106,6 +123,8 @@ func Procedure(url string, root map[string]*proto.Paths, data_channel chan *prot
 				continue
 			}
 		}
+
+		// END CHECKS
 
 		url_queue.Enqueue(url)
 		// Allocate path in the heap as it is required out of this scope
@@ -167,10 +186,7 @@ func Procedure(url string, root map[string]*proto.Paths, data_channel chan *prot
 }
 
 type BrolerOptions struct {
-	Url string
-  OnlySearchDomain bool
-  IgnoreJSearch bool
-  IgnoreCSSearch bool
+	*proto.PagesInfoReq
 }
 
 func Broler(opts BrolerOptions, data_channel chan *proto.Pages) {
