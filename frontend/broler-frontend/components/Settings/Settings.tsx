@@ -126,10 +126,9 @@ export default function Settings( props: SettingsProps ) {
                     <TooltipTrigger asChild>
                     <Button type="submit" variant="outline" onClick={() => {
                         props.collapsible_props.setAllowed_websites((prev) => {
-                            prev.push(allowedUrl)
-                            setAllowedUrl('');
-                            return prev
-                        })
+                            return [...prev, allowedUrl]
+                        });
+                        setAllowedUrl('');
                     }}>
                       Add
                     </Button>
@@ -206,12 +205,12 @@ export default function Settings( props: SettingsProps ) {
                     <Tooltip>
                     <TooltipTrigger asChild>
                     <Button type="submit" variant="destructive" onClick={
-                        () => props.collapsible_props.setDisAllowed_websites((prev) => {
-                            prev.push(disAllowedUrl);
+                        () => {
+                            props.collapsible_props.setDisAllowed_websites((prev) => {
+                                return [...prev, disAllowedUrl];
+                            })
                             setDisAllowedUrl('');
-                            return prev;
-                        })
-                    }>
+                    }}>
                       Add
                     </Button>
                     </TooltipTrigger>

@@ -46,6 +46,8 @@ export default function Home() {
         onlySearchDomain: onlySearchGivenDomain,
         ignoreJSearch: ignoreJSearch,
         ignoreCSSearch: ignoreCSSearch,
+        allowedUrls: allowedUrls,
+        disAllowedUrls: disallowedUrls,
     }
 
 

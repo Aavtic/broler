@@ -1,13 +1,22 @@
 import treeify from './treeify';
 import { TreeViewItemB } from './treeify';
 
-export default function GetPages(settings: {
+interface GetPagesProps {
     url: string,
     onlySearchDomain: boolean,
     ignoreJSearch: boolean,
     ignoreCSSearch: boolean,
-}, setData: React.Dispatch<React.SetStateAction<TreeViewItemB[]>>) {
-    const eventSource = new EventSource(`/api/live?url=${encodeURIComponent(settings.url)}&onlySearchDomain=${encodeURIComponent(settings.onlySearchDomain)}&ignoreJSearch=${encodeURIComponent(settings.ignoreJSearch)}&ignoreCSSearch=${encodeURIComponent(settings.ignoreCSSearch)}`);
+    allowedUrls: String[],
+    disAllowedUrls: String[],
+}
+
+export default function GetPages(settings: GetPagesProps, setData: React.Dispatch<React.SetStateAction<TreeViewItemB[]>>) {
+    const urlsData= JSON.stringify({
+        allowedUrls: settings.allowedUrls,
+        disAllowedUrls: settings.disAllowedUrls,
+    })
+    const url = `/api/live?url=${encodeURIComponent(settings.url)}&onlySearchDomain=${encodeURIComponent(settings.onlySearchDomain)}&ignoreJSearch=${encodeURIComponent(settings.ignoreJSearch)}&ignoreCSSearch=${encodeURIComponent(settings.ignoreCSSearch)}&urlsData=${encodeURIComponent(urlsData)}`
+    const eventSource = new EventSource(url);
     eventSource.onmessage = (event) => {
         let done: boolean = false;
         let parsed: any;

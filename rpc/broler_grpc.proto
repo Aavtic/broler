@@ -9,11 +9,17 @@ service Broler {
   rpc ClientRequests(ClientReq) returns (ServerResponse) {}
 }
 
+message urlsDataType {
+  repeated string allowedUrls = 1;
+  repeated string disAllowedUrls = 2;
+}
+
 message PagesInfoReq {
   string url = 1;
   bool onlySearchDomain = 2;
   bool ignoreJSearch = 3;
   bool ignoreCSSearch = 4;
+  urlsDataType urlsData = 5;
 }
 
 // {
