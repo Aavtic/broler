@@ -38,12 +38,16 @@ export default function Home() {
     const [onlySearchGivenDomain, setOnlySearchGivenDomain] = useState<boolean>(true);
     const [ignoreJSearch, setIgnoreJSearch] = useState<boolean>(false);
     const [ignoreCSSearch, setCSSearch] = useState<boolean>(true);
+    const [allowedUrls, setAllowedUrls] = useState<Array<String>>([]);
+    const [disallowedUrls, setDisallowedUrls] = useState<Array<String>>([]);
 
     const settingsProps = {
         url: inputUrl,
         onlySearchDomain: onlySearchGivenDomain,
         ignoreJSearch: ignoreJSearch,
         ignoreCSSearch: ignoreCSSearch,
+        allowedUrls: allowedUrls,
+        disAllowedUrls: disallowedUrls,
     }
 
 
@@ -55,7 +59,6 @@ export default function Home() {
     }
 
     useEffect(() => {
-        console.log('in use effect');
         if (inputUrl === '') return;
 
         const cleanUp = GetPages(settingsProps, setData)
@@ -93,7 +96,7 @@ export default function Home() {
                 on_change:on_change,
                 func:initiateNewSearch,
             }}
-            settings_props={{
+            check_box_props={{
                 currentDomain: onlySearchGivenDomain,
                 jsSearch: ignoreJSearch,
                 cssSearch: ignoreCSSearch,
@@ -101,6 +104,16 @@ export default function Home() {
                 setJSearch: setIgnoreJSearch,
                 setCSSearch: setCSSearch,
             }}
+
+            collapsible_props={
+                {
+                    allowed_websites: allowedUrls,
+                    setAllowed_websites: setAllowedUrls,
+                    disallowed_websites: disallowedUrls,
+                    setDisAllowed_websites: setDisallowedUrls,
+                }
+            }
+
           />
           {/* Scrollable PageTree container */}
           <div className="flex justify-center w-full max-w-4xl">
