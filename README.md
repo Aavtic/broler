@@ -29,7 +29,7 @@
 
 ## 🖼️ Demo
 
-> _Screenshots or GIFs here if available. Paste or drag images into this section!_
+> _Coming soon!_
 
 ---
 
