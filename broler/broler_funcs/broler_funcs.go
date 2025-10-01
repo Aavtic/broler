@@ -109,7 +109,7 @@ func Procedure(url string, root map[string]*proto.Paths, data_channel chan *prot
 			// calling this multiple times may be expensive
 			// opts.Urls is constant
 			if !is_urls_same_domain(url, opts.Url) {
-				log.Printf("INFO: Skipping %s because they have the same domain", url)
+				log.Printf("INFO: Skipping %s because they are not the same domain", url)
 				continue
 			}
 		}
